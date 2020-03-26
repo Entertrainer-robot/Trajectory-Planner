@@ -94,11 +94,14 @@ class Flight_Model_1:
           theta = 90 - 0.5*srcsin(g*d/v^2)
             
         '''
-        return [(0.5*np.arcsin((-1*g*d)/v_0**2)),np.pi/2-(0.5*np.arcsin((-1*g*d)/v_0**2))]
+        
+        angle_1 = (0.5*np.arcsin((-1*g*d)/v_0**2))
+        angle_2 = np.pi/2-(0.5*np.arcsin((-1*g*d)/v_0**2))            
+            
+        return [angle_1,angle_2]
     
-    def trajectory_seq(self,v_0,theta,g,p_x=0,p_z=0,a_x=0,a_y=-9.81):
+    def trajectory_seq(self,v_0,theta,p_x=0,p_z=0,a_x=0,a_y=-9.81):
         #initial parameter
-        theta = self.deg_2_rad(theta)
         time = 0
         while True:
             yield np.array([time,
@@ -107,6 +110,12 @@ class Flight_Model_1:
                            p_x + v_0*time*np.cos(theta) + a_x*time**2,#horzontal disp
                            p_z + v_0*time*np.sin(theta) + 0.5*a_y*time**2])#vertical disp
             time+=0.01
+
+    def calc_lnch_vel(self,x_f,theta, g = -9.81,x_i = 0):
+        return np.sqrt((-1*g*(x_f-x_i))/(np.sin(2*theta)))
+
+    def cal_impact_energy(self,vel,ball_mass):
+        return 0.5*ball_mass*vel**2
             
             
             
